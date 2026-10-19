@@ -1,0 +1,18 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11>=2.12"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "cuokada"
+version = "0.1.0"
+description = "Elastic dislocation Green's functions on the cpu and the gpu: Okada rectangles (half space) and Nikkhoo-Walter triangles (full or half space)"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "California Institute of Technology" }]
+requires-python = ">=3.9"
+dependencies = ["numpy"]
+
+[tool.scikit-build]
+cmake.version = ">=3.24"
+wheel.packages = []
+cmake.define = { CUOKADA_TESTS = "OFF" }
