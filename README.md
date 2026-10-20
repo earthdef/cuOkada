@@ -1,6 +1,7 @@
 # cuokada
 
-Elastic dislocation Green's functions, displacements and strains, on the cpu and the gpu:
+Elastic dislocation Green's functions, displacements and strains, on the cpu and the gpu, with
+C++, Fortran and Python interfaces:
 
 - **rectangles** in a half space, after Okada (1992), written from the paper as templated
   host/device C++;
