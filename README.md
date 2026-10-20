@@ -202,7 +202,8 @@ ctest --test-dir build
 cmake --install build --prefix $CONDA_PREFIX
 ```
 
-or the Python module alone, into the current Python environment, with pip:
+or with pip, into the current Python environment: the Python module, and the C library, the
+headers and the Fortran module, in the environment's `lib` and `include/cuokada`:
 
 ```bash
 pip install .

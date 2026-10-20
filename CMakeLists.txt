@@ -66,12 +66,19 @@ target_link_libraries(cuokada PRIVATE cuokada_objects)
 target_include_directories(cuokada PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-set_target_properties(cuokada PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
-# a wheel carries only the python module
-if(NOT SKBUILD)
-  install(TARGETS cuokada LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-  install(DIRECTORY include/cuokada DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# the library, headers and fortran module go under the install prefix, or, from pip, into the lib
+# and include of the environment the wheel is installed into, through its data directory; a wheel
+# can't hold the symlinks of a versioned library, so there the library is unversioned
+if(SKBUILD)
+  set(CUOKADA_LIBDIR ${SKBUILD_DATA_DIR}/lib)
+  set(CUOKADA_INCLUDEDIR ${SKBUILD_DATA_DIR}/include)
+else()
+  set(CUOKADA_LIBDIR ${CMAKE_INSTALL_LIBDIR})
+  set(CUOKADA_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
+  set_target_properties(cuokada PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
 endif()
+install(TARGETS cuokada LIBRARY DESTINATION ${CUOKADA_LIBDIR})
+install(DIRECTORY include/cuokada DESTINATION ${CUOKADA_INCLUDEDIR})
 
 # the python module
 if(CUOKADA_PYTHON)
@@ -93,7 +100,7 @@ if(CUOKADA_PYTHON)
 endif()
 
 # the fortran module
-if(CUOKADA_FORTRAN AND NOT SKBUILD)
+if(CUOKADA_FORTRAN)
   include(CheckLanguage)
   check_language(Fortran)
   if(CMAKE_Fortran_COMPILER)
@@ -103,7 +110,7 @@ if(CUOKADA_FORTRAN AND NOT SKBUILD)
     target_include_directories(cuokada_fortran PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/fortran)
     target_link_libraries(cuokada_fortran PUBLIC cuokada)
     install(FILES fortran/cuokada.f90 ${CMAKE_CURRENT_BINARY_DIR}/fortran/cuokada.mod
-      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cuokada)
+      DESTINATION ${CUOKADA_INCLUDEDIR}/cuokada)
   else()
     set(CUOKADA_FORTRAN OFF)
   endif()
