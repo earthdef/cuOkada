@@ -201,11 +201,16 @@ cmake --install build --prefix $CONDA_PREFIX
 ```
 
 **cpu only.** Without a CUDA compiler, CMake builds the cpu backend (OpenMP) alone. To leave
-the gpu out on a machine that has one:
+the gpu out on a machine that has one, either configure the full build with
 
 ```bash
 cmake -S . -B build -DCUOKADA_CUDA=OFF -DCMAKE_PREFIX_PATH=$CONDA_PREFIX
-pip install . -C cmake.define.CUOKADA_CUDA=OFF     # the Python module alone
+```
+
+and build, test and install it as above, or install the Python module alone with
+
+```bash
+pip install . -C cmake.define.CUOKADA_CUDA=OFF
 ```
 
 The interface stays the same: `cuokada_has_cuda()` (`cuokada.has_cuda()` in Python) returns 0,
